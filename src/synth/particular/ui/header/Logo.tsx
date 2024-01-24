@@ -1,9 +1,9 @@
-import Typography from '@material-ui/core/Typography';
-import React from 'react';
-import { getClasses } from './Logo.jss';
+import Typography from '@material-ui/core/Typography'
+import React from 'react'
+import { getClasses } from './Logo.jss'
 
 export const Logo = () => {
-    const classes = getClasses();
+    const classes = getClasses()
 
     return (
         <div className={classes.root}>
@@ -16,5 +16,5 @@ export const Logo = () => {
                 v0.0.0-alpha1
             </Typography>
         </div>
-    );
-};
+    )
+}

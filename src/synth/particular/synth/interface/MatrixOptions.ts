@@ -1,5 +1,5 @@
-import { SignalRoute } from './SignalRoute';
+import { SignalRoute } from './SignalRoute'
 
 export interface MatrixOptions {
-    routes: Array<SignalRoute>;
+    routes: Array<SignalRoute>
 }

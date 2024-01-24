@@ -1,14 +1,14 @@
-import Grid from '@material-ui/core/Grid';
-import React from 'react';
-import { getClasses } from './Header.jss';
-import { Actions } from './header/Actions';
-import { DeskSelector } from './header/DeskSelector';
-import { Logo } from './header/Logo';
-import { MasterControl } from './header/MasterControl';
-import { PresetSelector } from './header/PresetSelector';
+import Grid from '@material-ui/core/Grid'
+import React from 'react'
+import { getClasses } from './Header.jss'
+import { Actions } from './header/Actions'
+import { DeskSelector } from './header/DeskSelector'
+import { Logo } from './header/Logo'
+import { MasterControl } from './header/MasterControl'
+import { PresetSelector } from './header/PresetSelector'
 
 export const Header = () => {
-    const classes = getClasses();
+    const classes = getClasses()
 
     return (
         <div className={classes.root}>
@@ -30,5 +30,5 @@ export const Header = () => {
                 </Grid>
             </Grid>
         </div>
-    );
-};
+    )
+}

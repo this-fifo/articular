@@ -1,10 +1,10 @@
 export const debounce = <T>(fn: any, ms: number): T => {
-    let timeout: any;
+    let timeout: any
 
-    return (function (...rest: any) {
-        const delegate = () => fn(...rest);
+    return function (...rest: any) {
+        const delegate = () => fn(...rest)
 
-        clearTimeout(timeout);
-        timeout = setTimeout(delegate, ms);
-    } as unknown) as T;
-};
+        clearTimeout(timeout)
+        timeout = setTimeout(delegate, ms)
+    } as unknown as T
+}

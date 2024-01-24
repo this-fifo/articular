@@ -1,123 +1,123 @@
-import { Checkbox, debounce, Typography } from '@material-ui/core';
-import Grid from '@material-ui/core/Grid';
-import React, { useCallback, useContext, useRef, useState } from 'react';
-import { OptionsBusContext } from '../../../../bus/OptionsBusManager';
-import { OptionsContext } from '../../../../Particular';
-import { getClasses } from './Metal.jss';
-import { getClasses as getUiClasses } from '../../../UI.jss';
-import { useSyncConfig } from '../../../hook/useSyncConfig';
-import TextField from '@material-ui/core/TextField';
-import * as skins from 'react-rotary-knob-skin-pack';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
-import { Knob } from 'react-rotary-knob';
-import Paper from '@material-ui/core/Paper';
+import { Checkbox, debounce, Typography } from '@material-ui/core'
+import Grid from '@material-ui/core/Grid'
+import React, { useCallback, useContext, useRef, useState } from 'react'
+import { OptionsBusContext } from '../../../../bus/OptionsBusManager'
+import { OptionsContext } from '../../../../Particular'
+import { getClasses } from './Metal.jss'
+import { getClasses as getUiClasses } from '../../../UI.jss'
+import { useSyncConfig } from '../../../hook/useSyncConfig'
+import TextField from '@material-ui/core/TextField'
+import * as skins from 'react-rotary-knob-skin-pack'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Switch from '@material-ui/core/Switch'
+import { Knob } from 'react-rotary-knob'
+import Paper from '@material-ui/core/Paper'
 
 export const Metal = () => {
-    const uiClasses = getUiClasses();
+    const uiClasses = getUiClasses()
 
-    const optionsContext = useContext(OptionsContext);
-    const optionsBusContext = useContext(OptionsBusContext);
+    const optionsContext = useContext(OptionsContext)
+    const optionsBusContext = useContext(OptionsBusContext)
 
     const onSetDebounced = useCallback(
         (param: string, debounceTime: number, childKey?: string) =>
             debounce((value: any) => {
-                useSyncConfig(optionsBusContext, 'metal', param, value, childKey);
+                useSyncConfig(optionsBusContext, 'metal', param, value, childKey)
             }, debounceTime),
         [optionsBusContext],
-    );
+    )
 
     const onSwitch = useCallback(
         (param: string, childKey?: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
-            useSyncConfig(optionsBusContext, 'metal', param, event.target.checked, childKey);
+            useSyncConfig(optionsBusContext, 'metal', param, event.target.checked, childKey)
         },
         [optionsBusContext],
-    );
+    )
 
-    const syncEnabled = onSetDebounced('enabled', 1);
+    const syncEnabled = onSetDebounced('enabled', 1)
 
     const onSwitchConnected = useCallback(
         () => (event: React.ChangeEvent<any>, value: any) => {
-            syncEnabled(event.target.checked);
+            syncEnabled(event.target.checked)
         },
         [],
-    );
+    )
 
     // === DETUNE
 
-    const syncDetune = onSetDebounced('detune', 1);
+    const syncDetune = onSetDebounced('detune', 1)
 
     const onDetuneChange = useCallback(
         () => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-            syncDetune(parseInt(event.target.value, 10) || 0);
+            syncDetune(parseInt(event.target.value, 10) || 0)
         },
         [],
-    );
+    )
 
     // === VOLUME / LEVEL
 
-    const [volume, setVolume] = useState(optionsContext!.metal.volume! || 0.5);
-    const syncVolume = onSetDebounced('volume', 25);
+    const [volume, setVolume] = useState(optionsContext!.metal.volume! || 0.5)
+    const syncVolume = onSetDebounced('volume', 25)
 
     const onVolumeChange = useCallback(
         () => (volume: number) => {
-            setVolume(volume / 100);
-            syncVolume(volume / 100);
+            setVolume(volume / 100)
+            syncVolume(volume / 100)
         },
         [setVolume],
-    );
+    )
 
     // === PAN
 
-    const [pan, setPan] = useState<number>((optionsContext?.metal as any).pan || 0);
-    const syncPan = onSetDebounced('pan', 1);
+    const [pan, setPan] = useState<number>((optionsContext?.metal as any).pan || 0)
+    const syncPan = onSetDebounced('pan', 1)
 
     const onPanChange = useCallback(
         () => (pan: number) => {
-            setPan(pan / 100);
-            syncPan(pan / 100);
+            setPan(pan / 100)
+            syncPan(pan / 100)
         },
         [setPan],
-    );
+    )
 
     // === HARMONICITY
 
-    const [harmonicity, setHarmonicity] = useState<number>((optionsContext!.metal as any).harmonicity || 1);
-    const syncHarmonicity = onSetDebounced('harmonicity', 1);
+    const [harmonicity, setHarmonicity] = useState<number>((optionsContext!.metal as any).harmonicity || 1)
+    const syncHarmonicity = onSetDebounced('harmonicity', 1)
 
     const onHarmonicityChange = useCallback(
         () => (harmonicity: number) => {
-            setHarmonicity(harmonicity / 100);
-            syncHarmonicity(harmonicity / 100);
+            setHarmonicity(harmonicity / 100)
+            syncHarmonicity(harmonicity / 100)
         },
         [setHarmonicity],
-    );
+    )
 
     // === MODULATION INDEX
 
-    const [modulationIndex, setModulationIndex] = useState<number>((optionsContext!.metal as any).modulationIndex || 0);
-    const syncModulationIndex = onSetDebounced('modulationIndex', 1);
+    const [modulationIndex, setModulationIndex] = useState<number>((optionsContext!.metal as any).modulationIndex || 0)
+    const syncModulationIndex = onSetDebounced('modulationIndex', 1)
 
     const onModulationIndexChange = useCallback(
         () => (modulationIndex: number) => {
-            setModulationIndex(modulationIndex / 100);
-            syncModulationIndex(modulationIndex / 100);
+            setModulationIndex(modulationIndex / 100)
+            syncModulationIndex(modulationIndex / 100)
         },
         [setModulationIndex],
-    );
+    )
 
     // === OCTAVES
 
-    const [octaves, setOctaves] = useState<number>((optionsContext!.metal as any).octaves || 0);
-    const syncOctaves = onSetDebounced('octaves', 1);
+    const [octaves, setOctaves] = useState<number>((optionsContext!.metal as any).octaves || 0)
+    const syncOctaves = onSetDebounced('octaves', 1)
 
     const onOctavesChange = useCallback(
         () => (octaves: number) => {
-            setOctaves(octaves);
-            syncOctaves(octaves);
+            setOctaves(octaves)
+            syncOctaves(octaves)
         },
         [setOctaves],
-    );
+    )
 
     return (
         <Paper elevation={3} className={uiClasses.paper}>
@@ -299,5 +299,5 @@ export const Metal = () => {
                 </Grid>
             </Grid>
         </Paper>
-    );
-};
+    )
+}

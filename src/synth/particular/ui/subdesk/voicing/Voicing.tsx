@@ -1,41 +1,41 @@
-import { debounce, Typography } from '@material-ui/core';
-import Grid from '@material-ui/core/Grid';
-import React, { useCallback, useContext, useState } from 'react';
-import { OptionsBusContext } from '../../../bus/OptionsBusManager';
-import { OptionsContext } from '../../../Particular';
-import { getClasses } from './Voicing.jss';
-import { getClasses as getUiClasses } from '../../UI.jss';
-import { useSyncConfig } from '../../hook/useSyncConfig';
-import * as skins from 'react-rotary-knob-skin-pack';
-import { Knob } from 'react-rotary-knob';
-import Paper from '@material-ui/core/Paper';
+import { debounce, Typography } from '@material-ui/core'
+import Grid from '@material-ui/core/Grid'
+import React, { useCallback, useContext, useState } from 'react'
+import { OptionsBusContext } from '../../../bus/OptionsBusManager'
+import { OptionsContext } from '../../../Particular'
+import { getClasses } from './Voicing.jss'
+import { getClasses as getUiClasses } from '../../UI.jss'
+import { useSyncConfig } from '../../hook/useSyncConfig'
+import * as skins from 'react-rotary-knob-skin-pack'
+import { Knob } from 'react-rotary-knob'
+import Paper from '@material-ui/core/Paper'
 
 export const Voicing = () => {
-    const uiClasses = getUiClasses();
+    const uiClasses = getUiClasses()
 
-    const optionsContext = useContext(OptionsContext);
-    const optionsBusContext = useContext(OptionsBusContext);
+    const optionsContext = useContext(OptionsContext)
+    const optionsBusContext = useContext(OptionsBusContext)
 
     const onSetDebounced = useCallback(
         (param: string, debounceTime: number, childKey?: string) =>
             debounce((value: any) => {
-                useSyncConfig(optionsBusContext, 'voicing', param, value, childKey);
+                useSyncConfig(optionsBusContext, 'voicing', param, value, childKey)
             }, debounceTime),
         [optionsBusContext],
-    );
+    )
 
     // === GLIDE
 
-    const [glide, setGlide] = useState(optionsContext!.voicing.glide! || 0.1);
-    const syncGlide = onSetDebounced('glide', 1);
+    const [glide, setGlide] = useState(optionsContext!.voicing.glide! || 0.1)
+    const syncGlide = onSetDebounced('glide', 1)
 
     const onGlideChange = useCallback(
         () => (glide: number) => {
-            setGlide(glide / 1000);
-            syncGlide(glide / 1000);
+            setGlide(glide / 1000)
+            syncGlide(glide / 1000)
         },
         [setGlide],
-    );
+    )
 
     return (
         <Paper elevation={3} className={uiClasses.paper}>
@@ -77,5 +77,5 @@ export const Voicing = () => {
                 </Grid>
             </Grid>
         </Paper>
-    );
-};
+    )
+}

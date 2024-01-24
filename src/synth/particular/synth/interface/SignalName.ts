@@ -1,5 +1,5 @@
 export interface SignalName {
-    id: string;
-    label: string;
-    description: string;
+    id: string
+    label: string
+    description: string
 }

@@ -1,6 +1,6 @@
-import { Note } from './Note';
+import { Note } from './Note'
 
 export interface NoteReceiver {
-    noteOn(note: Note): void;
-    noteOff(note: Note): void;
+    noteOn(note: Note): void
+    noteOff(note: Note): void
 }

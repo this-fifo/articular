@@ -1,3 +1,3 @@
-import { EnvelopeOptions } from 'tone';
+import { EnvelopeOptions } from 'tone'
 
-export type MasterEnvelopeOptions = Partial<EnvelopeOptions>;
+export type MasterEnvelopeOptions = Partial<EnvelopeOptions>

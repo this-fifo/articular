@@ -33,4 +33,4 @@ export const defaultLightTheme = {
             },
         },
     },
-} as any;
+} as any

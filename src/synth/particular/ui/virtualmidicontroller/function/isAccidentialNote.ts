@@ -1,5 +1,5 @@
-import NOTES from '../constants/NOTES';
+import NOTES from '../constants/NOTES'
 
 export const isAccidentalNote = (note: any) => {
-    return NOTES.includes(note) && note.includes('#');
-};
+    return NOTES.includes(note) && note.includes('#')
+}

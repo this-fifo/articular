@@ -1,100 +1,100 @@
-import { Module } from '../../../../synth/interface/Module';
-import { Grid, Typography } from '@material-ui/core';
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { Knob } from 'react-rotary-knob';
-import { OptionsBusContext } from '../../../../bus/OptionsBusManager';
-import { OptionsContext } from '../../../../Particular';
-import * as skins from 'react-rotary-knob-skin-pack';
-import { getClasses as getUiClasses } from '../../../UI.jss';
-import { debounce } from '../../../../synth/function/debounce';
-import { useSyncConfig } from '../../../hook/useSyncConfig';
-import useResizeObserver from 'use-resize-observer';
-import { EnvelopeGraph } from './EnvelopeGraph';
-import { useUpdate } from 'react-use';
+import { Module } from '../../../../synth/interface/Module'
+import { Grid, Typography } from '@material-ui/core'
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { Knob } from 'react-rotary-knob'
+import { OptionsBusContext } from '../../../../bus/OptionsBusManager'
+import { OptionsContext } from '../../../../Particular'
+import * as skins from 'react-rotary-knob-skin-pack'
+import { getClasses as getUiClasses } from '../../../UI.jss'
+import { debounce } from '../../../../synth/function/debounce'
+import { useSyncConfig } from '../../../hook/useSyncConfig'
+import useResizeObserver from 'use-resize-observer'
+import { EnvelopeGraph } from './EnvelopeGraph'
+import { useUpdate } from 'react-use'
 
 export interface EnvelopeScopeProps {
-    module: Module;
+    module: Module
 }
 
 export const EnvelopeScope = ({ module }: EnvelopeScopeProps) => {
-    const uiClasses = getUiClasses();
-    const optionsContext = useContext(OptionsContext);
-    const optionsBusContext = useContext(OptionsBusContext);
-    const reRender = useUpdate();
-    const { ref: resizeRef, width = 1, height = 1 } = useResizeObserver<HTMLDivElement>();
+    const uiClasses = getUiClasses()
+    const optionsContext = useContext(OptionsContext)
+    const optionsBusContext = useContext(OptionsBusContext)
+    const reRender = useUpdate()
+    const { ref: resizeRef, width = 1, height = 1 } = useResizeObserver<HTMLDivElement>()
 
     useEffect(() => {
-        reRender();
-        console.log('ENV reRender');
-    }, [optionsContext]);
+        reRender()
+        console.log('ENV reRender')
+    }, [optionsContext])
 
     const onSetDebounced = useCallback(
         (param: string, debounceTime: number, childKey?: string) =>
             debounce((value: any) => {
-                useSyncConfig(optionsBusContext, module, param, value, childKey);
+                useSyncConfig(optionsBusContext, module, param, value, childKey)
             }, debounceTime),
         [optionsBusContext],
-    );
+    )
 
     // ATTACK
 
     const [attack, setAttack] = useState<number>(
         ((optionsContext as any)![module]['envelope']!.attack as number) || 0.1,
-    );
-    const syncAttack = onSetDebounced('attack', 1, 'envelope');
+    )
+    const syncAttack = onSetDebounced('attack', 1, 'envelope')
 
     const onAttackChange = useCallback(
         () => (attack: number) => {
-            setAttack(attack / 100);
-            syncAttack(attack / 100);
+            setAttack(attack / 100)
+            syncAttack(attack / 100)
         },
         [setAttack],
-    );
+    )
 
     // === DECAY
 
-    const [decay, setDecay] = useState<number>(((optionsContext as any)![module].envelope!.decay as number) || 0.3);
-    const syncDecay = onSetDebounced('decay', 1, 'envelope');
+    const [decay, setDecay] = useState<number>(((optionsContext as any)![module].envelope!.decay as number) || 0.3)
+    const syncDecay = onSetDebounced('decay', 1, 'envelope')
 
     const onDecayChange = useCallback(
         () => (decay: number) => {
-            setDecay(decay / 100);
-            syncDecay(decay / 100);
+            setDecay(decay / 100)
+            syncDecay(decay / 100)
         },
         [setDecay],
-    );
+    )
 
     // === SUSTAIN
 
     const [sustain, setSustain] = useState<number>(
         ((optionsContext as any)![module].envelope!.sustain as number) || 0.85,
-    );
-    const syncSustain = onSetDebounced('sustain', 1, 'envelope');
+    )
+    const syncSustain = onSetDebounced('sustain', 1, 'envelope')
 
     const oSustainChange = useCallback(
         () => (sustain: number) => {
-            setSustain(sustain / 100);
-            syncSustain(sustain / 100);
+            setSustain(sustain / 100)
+            syncSustain(sustain / 100)
         },
         [setSustain],
-    );
+    )
 
     // === RELEASE
 
     const [release, setRelease] = useState<number>(
         ((optionsContext as any)![module].envelope!.release as number) || 0.4,
-    );
-    const syncRelease = onSetDebounced('release', 1, 'envelope');
+    )
+    const syncRelease = onSetDebounced('release', 1, 'envelope')
 
     const onReleaseChange = useCallback(
         () => (release: number) => {
-            setRelease(release / 100);
-            syncRelease(release / 100);
+            setRelease(release / 100)
+            syncRelease(release / 100)
         },
         [setRelease],
-    );
+    )
 
-    const [envelope, setEnvelope] = useState([{ x: 0, y: 0 }]);
+    const [envelope, setEnvelope] = useState([{ x: 0, y: 0 }])
 
     useEffect(() => {
         if (attack && decay && sustain && release) {
@@ -111,9 +111,9 @@ export const EnvelopeScope = ({ module }: EnvelopeScopeProps) => {
                 }, // S
                 { x: attack + decay * 2, y: sustain * 100 },
                 { x: attack + decay * 2 + release, y: 0 }, // R
-            ]);
+            ])
         }
-    }, [attack, decay, release, sustain]);
+    }, [attack, decay, release, sustain])
 
     return (
         <>
@@ -222,5 +222,5 @@ export const EnvelopeScope = ({ module }: EnvelopeScopeProps) => {
                 </Grid>
             </Grid>
         </>
-    );
-};
+    )
+}

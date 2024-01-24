@@ -3,5 +3,5 @@ export declare type RecursivePartial<T> = {
         ? Array<RecursivePartial<U>>
         : T[P] extends object
         ? RecursivePartial<T[P]>
-        : T[P];
-};
+        : T[P]
+}

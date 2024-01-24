@@ -16,11 +16,11 @@ export type FXModuleType =
     | 'stereowidener'
     | 'tremolo'
     | 'vibrato'
-    | 'eq3';
+    | 'eq3'
 export interface FXModule<T> {
-    name: FXModuleType;
-    index: number;
-    label: string;
-    enabled: boolean;
-    config: T;
+    name: FXModuleType
+    index: number
+    label: string
+    enabled: boolean
+    config: T
 }

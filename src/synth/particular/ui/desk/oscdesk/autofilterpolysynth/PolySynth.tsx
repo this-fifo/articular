@@ -1,277 +1,277 @@
-import { Checkbox, Grid, Modal, Paper, Slider, TextField, Typography } from '@material-ui/core';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { Knob } from 'react-rotary-knob';
-import { OptionsBusContext } from '../../../../bus/OptionsBusManager';
-import { OptionsContext } from '../../../../Particular';
-import * as skins from 'react-rotary-knob-skin-pack';
-import { getClasses } from './PolySynth.jss';
-import { getClasses as getUiClasses } from '../../../UI.jss';
-import { debounce } from '../../../../synth/function/debounce';
-import { WaveForm } from '../../../../synth/interface/Waveform';
-import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabel';
-import Switch from '@material-ui/core/Switch/Switch';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import Radio from '@material-ui/core/Radio';
-import { AdvancedModulationType } from '../../../../synth/interface/AdvancedModulationType';
-import { useSyncConfig } from '../../../hook/useSyncConfig';
-import { SineWave } from '../../../component/SineWave';
-import useResizeObserver from 'use-resize-observer';
-import { SAMPLE_COUNT, SAMPLE_RATE } from '../../../constants/WaveForm';
-import { calculateSineCurve } from '../../../function/calculateSineCurve';
-import { useEffectOnce } from 'react-use';
-import { List } from 'immutable';
-import { calculateCustomWaveform } from '../../../function/calculateCustomWaveform';
-import { PolySynthOptions } from '../../../../synth/interface/PolySynthOptions';
-import Button from '@material-ui/core/Button';
-import Fade from '@material-ui/core/Fade';
-import { SineSurface, SinusSurfaceWaveSpacing } from '../../../component/SineSurface';
-import { WaveformDesigner } from '../../../component/waveform-designer/WaveformDesigner';
-import { OscName } from '../../../../synth/interface/OscName';
-import { generatePeriodicWaveCoefficients } from '../../../../synth/function/generatePeriodicWaveCoefficients';
+import { Checkbox, Grid, Modal, Paper, Slider, TextField, Typography } from '@material-ui/core'
+import ToggleButton from '@material-ui/lab/ToggleButton'
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
+import { Knob } from 'react-rotary-knob'
+import { OptionsBusContext } from '../../../../bus/OptionsBusManager'
+import { OptionsContext } from '../../../../Particular'
+import * as skins from 'react-rotary-knob-skin-pack'
+import { getClasses } from './PolySynth.jss'
+import { getClasses as getUiClasses } from '../../../UI.jss'
+import { debounce } from '../../../../synth/function/debounce'
+import { WaveForm } from '../../../../synth/interface/Waveform'
+import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabel'
+import Switch from '@material-ui/core/Switch/Switch'
+import RadioGroup from '@material-ui/core/RadioGroup'
+import Radio from '@material-ui/core/Radio'
+import { AdvancedModulationType } from '../../../../synth/interface/AdvancedModulationType'
+import { useSyncConfig } from '../../../hook/useSyncConfig'
+import { SineWave } from '../../../component/SineWave'
+import useResizeObserver from 'use-resize-observer'
+import { SAMPLE_COUNT, SAMPLE_RATE } from '../../../constants/WaveForm'
+import { calculateSineCurve } from '../../../function/calculateSineCurve'
+import { useEffectOnce } from 'react-use'
+import { List } from 'immutable'
+import { calculateCustomWaveform } from '../../../function/calculateCustomWaveform'
+import { PolySynthOptions } from '../../../../synth/interface/PolySynthOptions'
+import Button from '@material-ui/core/Button'
+import Fade from '@material-ui/core/Fade'
+import { SineSurface, SinusSurfaceWaveSpacing } from '../../../component/SineSurface'
+import { WaveformDesigner } from '../../../component/waveform-designer/WaveformDesigner'
+import { OscName } from '../../../../synth/interface/OscName'
+import { generatePeriodicWaveCoefficients } from '../../../../synth/function/generatePeriodicWaveCoefficients'
 
 export interface PolySynthProps {
-    oscName: OscName;
+    oscName: OscName
 }
 
 export const PolySynth = ({ oscName }: PolySynthProps) => {
-    const classes = getClasses();
-    const uiClasses = getUiClasses();
-    const { ref: resizeRef, width: scopeWidth = 250, height: scopeHeight = 100 } = useResizeObserver<HTMLDivElement>();
+    const classes = getClasses()
+    const uiClasses = getUiClasses()
+    const { ref: resizeRef, width: scopeWidth = 250, height: scopeHeight = 100 } = useResizeObserver<HTMLDivElement>()
 
-    const optionsContext = useContext(OptionsContext);
-    const optionsBusContext = useContext(OptionsBusContext);
+    const optionsContext = useContext(OptionsContext)
+    const optionsBusContext = useContext(OptionsBusContext)
 
     const onSet = useCallback(
         (param: string, childKey?: string) => (value: any) => {
-            useSyncConfig(optionsBusContext, oscName, param, value, childKey);
+            useSyncConfig(optionsBusContext, oscName, param, value, childKey)
         },
         [optionsBusContext],
-    );
+    )
 
     const onSetDebounced = useCallback(
         (param: string, debounceTime: number, childKey?: string) =>
             debounce((value: any) => {
-                useSyncConfig(optionsBusContext, oscName, param, value, childKey);
+                useSyncConfig(optionsBusContext, oscName, param, value, childKey)
             }, debounceTime),
         [optionsBusContext],
-    );
+    )
 
     const onSwitch = useCallback(
         (param: string, childKey?: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
-            useSyncConfig(optionsBusContext, oscName, param, event.target.checked, childKey);
+            useSyncConfig(optionsBusContext, oscName, param, event.target.checked, childKey)
         },
         [optionsBusContext],
-    );
+    )
 
     // === OCTAVE
 
-    const syncOctave = onSetDebounced('octave', 1);
+    const syncOctave = onSetDebounced('octave', 1)
 
     const onOctaveChange = useCallback(
         () => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-            syncOctave(parseInt(event.target.value, 10) || 0);
+            syncOctave(parseInt(event.target.value, 10) || 0)
         },
         [],
-    );
+    )
 
     // === DETUNE
 
-    const syncDetune = onSetDebounced('detune', 1);
+    const syncDetune = onSetDebounced('detune', 1)
 
     const onDetuneChange = useCallback(
         () => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-            syncDetune(parseInt(event.target.value, 10) || 0);
+            syncDetune(parseInt(event.target.value, 10) || 0)
         },
         [],
-    );
+    )
 
     // === VOLUME / LEVEL
 
-    const [volume, setVolume] = useState(optionsContext![oscName].volume! || 0.5);
-    const syncVolume = onSetDebounced('volume', 25);
+    const [volume, setVolume] = useState(optionsContext![oscName].volume! || 0.5)
+    const syncVolume = onSetDebounced('volume', 25)
 
     const onVolumeChange = useCallback(
         () => (volume: number) => {
-            setVolume(volume / 100);
-            syncVolume(volume / 100);
+            setVolume(volume / 100)
+            syncVolume(volume / 100)
         },
         [setVolume],
-    );
+    )
 
     // === WAVETABLE POSITION
 
-    const [waveTablePosition, setWaveTablePosition] = useState(optionsContext![oscName].waveTablePosition! || 0);
-    const syncSetWaveTablePosition = onSetDebounced('waveTablePosition', 5);
+    const [waveTablePosition, setWaveTablePosition] = useState(optionsContext![oscName].waveTablePosition! || 0)
+    const syncSetWaveTablePosition = onSetDebounced('waveTablePosition', 5)
 
     const onWaveTablePositionChange = useCallback(
         () => (evt: any, waveTablePosition: number | Array<number>) => {
-            setWaveTablePosition(waveTablePosition as number);
-            syncSetWaveTablePosition(waveTablePosition as number);
+            setWaveTablePosition(waveTablePosition as number)
+            syncSetWaveTablePosition(waveTablePosition as number)
         },
         [setWaveTablePosition, syncSetWaveTablePosition],
-    );
+    )
 
     // === PULSE WIDTH
 
-    const [pulseWidth, setPulseWidth] = useState((optionsContext![oscName].oscillator as any).width! || 0);
-    const syncWidth = onSetDebounced('width', 1, 'oscillator');
+    const [pulseWidth, setPulseWidth] = useState((optionsContext![oscName].oscillator as any).width! || 0)
+    const syncWidth = onSetDebounced('width', 1, 'oscillator')
 
     const onPulseWidthChange = useCallback(
         () => (evt: any, width: number | Array<number>) => {
-            setPulseWidth((width as number) - 0.49);
-            syncWidth((width as number) - 0.49);
+            setPulseWidth((width as number) - 0.49)
+            syncWidth((width as number) - 0.49)
         },
         [setWaveTablePosition],
-    );
+    )
 
     // === MODULATION FREQUENCY
 
     const [modulationFrequency, setModulationFrequency] = useState<number>(
         (optionsContext![oscName] as any).oscillator.modulationFrequency! || 0,
-    );
-    const syncModulationFrequency = onSetDebounced('modulationFrequency', 1, 'oscillator');
+    )
+    const syncModulationFrequency = onSetDebounced('modulationFrequency', 1, 'oscillator')
 
     const onModulationFrequencyChange = useCallback(
         () => (evt: any, modulationFrequency: number | Array<number>) => {
-            setModulationFrequency(modulationFrequency as number);
-            syncModulationFrequency(modulationFrequency as number);
+            setModulationFrequency(modulationFrequency as number)
+            syncModulationFrequency(modulationFrequency as number)
         },
         [setModulationFrequency],
-    );
+    )
 
     // === WAVE FORM
 
-    const syncWaveForm = onSet('waveForm');
-    const [waveForm, setWaveForm] = useState<any>(optionsContext![oscName]!.waveForm);
+    const syncWaveForm = onSet('waveForm')
+    const [waveForm, setWaveForm] = useState<any>(optionsContext![oscName]!.waveForm)
 
     const onWaveFormChange = useCallback(
         () => (event: any, newWaveForm: string) => {
             if (newWaveForm !== null) {
-                setWaveForm(newWaveForm as any);
-                syncWaveForm(newWaveForm);
+                setWaveForm(newWaveForm as any)
+                syncWaveForm(newWaveForm)
             }
         },
         [setWaveForm, waveForm],
-    );
+    )
 
     useEffect(() => {
-        setWaveForm(optionsContext![oscName]!.waveForm);
-    }, [optionsContext![oscName]!.waveForm]);
+        setWaveForm(optionsContext![oscName]!.waveForm)
+    }, [optionsContext![oscName]!.waveForm])
 
     // === ADVANCED MODULATION TYPE
 
-    const syncAdvancedModulationType = onSet('advancedModulationType');
+    const syncAdvancedModulationType = onSet('advancedModulationType')
 
     const onModulationTypeChange = useCallback(
         () => (event: React.ChangeEvent<HTMLInputElement>, advancedModulationType: string) => {
-            syncAdvancedModulationType(advancedModulationType);
+            syncAdvancedModulationType(advancedModulationType)
         },
         [],
-    );
+    )
 
     // === PHASE
 
-    const [phase, setPhase] = useState<number>((optionsContext![oscName] as any).oscillator.phase || 0);
-    const syncPhase = onSetDebounced('phase', 1, 'oscillator');
+    const [phase, setPhase] = useState<number>((optionsContext![oscName] as any).oscillator.phase || 0)
+    const syncPhase = onSetDebounced('phase', 1, 'oscillator')
 
     const onPhaseChange = useCallback(
         () => (phase: number) => {
-            setPhase(phase);
-            syncPhase(phase);
+            setPhase(phase)
+            syncPhase(phase)
         },
         [setPhase],
-    );
+    )
 
     // === FAT
 
-    const syncUnison = onSetDebounced('unison', 1);
+    const syncUnison = onSetDebounced('unison', 1)
 
     const onUnisonChange = useCallback(
         () => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-            syncUnison(parseInt(event.target.value, 10) || 0);
+            syncUnison(parseInt(event.target.value, 10) || 0)
         },
         [],
-    );
+    )
 
-    const [spread, setSpread] = useState<number>((optionsContext![oscName] as any).spread || 0);
-    const syncSpread = onSetDebounced('spread', 1);
+    const [spread, setSpread] = useState<number>((optionsContext![oscName] as any).spread || 0)
+    const syncSpread = onSetDebounced('spread', 1)
 
     const onSpreadChange = useCallback(
         () => (spread: number) => {
-            setSpread(spread);
-            syncSpread(spread);
+            setSpread(spread)
+            syncSpread(spread)
         },
         [setSpread],
-    );
+    )
 
     // === AM/FM
 
-    const [harmonicity, setHarmonicity] = useState<number>((optionsContext![oscName] as any).harmonicity || 1);
-    const syncHarmonicity = onSetDebounced('harmonicity', 1);
+    const [harmonicity, setHarmonicity] = useState<number>((optionsContext![oscName] as any).harmonicity || 1)
+    const syncHarmonicity = onSetDebounced('harmonicity', 1)
 
     const onHarmonicityChange = useCallback(
         () => (harmonicity: number) => {
-            setHarmonicity(harmonicity / 100);
-            syncHarmonicity(harmonicity / 100);
+            setHarmonicity(harmonicity / 100)
+            syncHarmonicity(harmonicity / 100)
         },
         [setHarmonicity],
-    );
+    )
 
-    const syncSubModulationType = onSet('subModulationType');
-    const [subModulationType, setSubmodulationType] = useState<any>(optionsContext![oscName]!.subModulationType);
+    const syncSubModulationType = onSet('subModulationType')
+    const [subModulationType, setSubmodulationType] = useState<any>(optionsContext![oscName]!.subModulationType)
 
     const onSubModulationTypeChange = useCallback(
         () => (event: any, newWaveForm: string) => {
             if (newWaveForm !== null) {
-                syncSubModulationType(newWaveForm);
-                setSubmodulationType(newWaveForm);
+                syncSubModulationType(newWaveForm)
+                setSubmodulationType(newWaveForm)
             }
         },
         [subModulationType, setSubmodulationType],
-    );
+    )
 
     const [modulationIndex, setModulationIndex] = useState<number>(
         (optionsContext![oscName] as any).modulationIndex || 0,
-    );
-    const syncModulationIndex = onSetDebounced('modulationIndex', 1);
+    )
+    const syncModulationIndex = onSetDebounced('modulationIndex', 1)
 
     const onModulationIndexChange = useCallback(
         () => (modulationIndex: number) => {
-            setModulationIndex(modulationIndex / 100);
-            syncModulationIndex(modulationIndex / 100);
+            setModulationIndex(modulationIndex / 100)
+            syncModulationIndex(modulationIndex / 100)
         },
         [setModulationIndex],
-    );
+    )
 
     // === PAN
 
-    const [pan, setPan] = useState<number>((optionsContext![oscName] as any).pan || 0);
-    const syncPan = onSetDebounced('pan', 1);
+    const [pan, setPan] = useState<number>((optionsContext![oscName] as any).pan || 0)
+    const syncPan = onSetDebounced('pan', 1)
 
     const onPanChange = useCallback(
         () => (pan: number) => {
-            setPan(pan / 100);
-            syncPan(pan / 100);
+            setPan(pan / 100)
+            syncPan(pan / 100)
         },
         [setPan],
-    );
+    )
 
-    const [sineWave, setSineWave] = useState<List<number>>();
-    const [customWave, setCustomWave] = useState<List<number>>();
+    const [sineWave, setSineWave] = useState<List<number>>()
+    const [customWave, setCustomWave] = useState<List<number>>()
     const [partialAmplitudes, setPartialAmplitudes] = useState(
         ((optionsContext![oscName] as PolySynthOptions).oscillator! as any).partials || [1],
-    );
-    const [partialSines, setPartialSines] = useState<List<List<number>>>(List([]));
+    )
+    const [partialSines, setPartialSines] = useState<List<List<number>>>(List([]))
 
     useEffect(() => {
-        setPartialAmplitudes(((optionsContext![oscName] as PolySynthOptions).oscillator! as any).partials || [1]);
-    }, [((optionsContext![oscName] as PolySynthOptions).oscillator! as any).partials]);
+        setPartialAmplitudes(((optionsContext![oscName] as PolySynthOptions).oscillator! as any).partials || [1])
+    }, [((optionsContext![oscName] as PolySynthOptions).oscillator! as any).partials])
 
     useEffect(() => {
         const coefficients =
-            waveForm === WaveForm.CUSTOM ? partialAmplitudes : generatePeriodicWaveCoefficients(waveForm, 16384 / 2);
+            waveForm === WaveForm.CUSTOM ? partialAmplitudes : generatePeriodicWaveCoefficients(waveForm, 16384 / 2)
 
         switch (waveForm) {
             case WaveForm.SINE:
@@ -283,21 +283,21 @@ export const PolySynth = ({ oscName }: PolySynthProps) => {
             case WaveForm.TRIANGLE:
                 const partialSinesArray = coefficients.map((amplitude: number, index: number) =>
                     calculateSineCurve(440 /* A3 */ * (index + 1), amplitude, 101, SAMPLE_RATE),
-                );
-                const partialSines: List<List<number>> = List(partialSinesArray);
-                setPartialSines(List([...partialSines]));
-                setCustomWave(calculateCustomWaveform(partialSines, 0.8));
-                break;
+                )
+                const partialSines: List<List<number>> = List(partialSinesArray)
+                setPartialSines(List([...partialSines]))
+                setCustomWave(calculateCustomWaveform(partialSines, 0.8))
+                break
         }
-    }, [waveForm, partialAmplitudes]);
+    }, [waveForm, partialAmplitudes])
 
-    const [waveFormConfigOpen, setWaveFormConfigOpen] = useState(false);
+    const [waveFormConfigOpen, setWaveFormConfigOpen] = useState(false)
     const onWaveFormConfigClick = useCallback(
         () => () => {
-            setWaveFormConfigOpen(!waveFormConfigOpen);
+            setWaveFormConfigOpen(!waveFormConfigOpen)
         },
         [waveFormConfigOpen],
-    );
+    )
 
     return (
         <div className={classes.root}>
@@ -732,5 +732,5 @@ export const PolySynth = ({ oscName }: PolySynthProps) => {
                 </Grid>
             </Paper>
         </div>
-    );
-};
+    )
+}

@@ -1,19 +1,19 @@
-import { Typography } from '@material-ui/core';
-import Checkbox from '@material-ui/core/Checkbox';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import React, { useCallback, useContext } from 'react';
-import { OptionsBusContext } from '../../bus/OptionsBusManager';
-import { OptionsContext } from '../../Particular';
-import { LFO } from './lfo/LFO';
-import { getClasses } from './SubDesk.jss';
-import { Voicing } from './voicing/Voicing';
+import { Typography } from '@material-ui/core'
+import Checkbox from '@material-ui/core/Checkbox'
+import Grid from '@material-ui/core/Grid'
+import Paper from '@material-ui/core/Paper'
+import React, { useCallback, useContext } from 'react'
+import { OptionsBusContext } from '../../bus/OptionsBusManager'
+import { OptionsContext } from '../../Particular'
+import { LFO } from './lfo/LFO'
+import { getClasses } from './SubDesk.jss'
+import { Voicing } from './voicing/Voicing'
 
 export const SubDesk = () => {
-    const classes = getClasses();
+    const classes = getClasses()
 
-    const optionsContext = useContext(OptionsContext);
-    const optionsBusContext = useContext(OptionsBusContext);
+    const optionsContext = useContext(OptionsContext)
+    const optionsBusContext = useContext(OptionsBusContext)
 
     return (
         <div className={classes.root}>
@@ -36,5 +36,5 @@ export const SubDesk = () => {
                 </Grid>
             </Grid>
         </div>
-    );
-};
+    )
+}

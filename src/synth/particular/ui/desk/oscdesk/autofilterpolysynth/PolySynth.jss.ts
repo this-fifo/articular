@@ -1,5 +1,5 @@
-import { makeStyles } from '@material-ui/styles';
-import { Theme } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles'
+import { Theme } from '@material-ui/core'
 
 export const getClasses = makeStyles(({ palette }: Theme) => ({
     root: {
@@ -62,4 +62,4 @@ export const getClasses = makeStyles(({ palette }: Theme) => ({
         backgroundColor: 'rgba(0,0,0,0.9)',
         border: '2px solid rgba(255,255,255,0.9)',
     },
-}));
+}))

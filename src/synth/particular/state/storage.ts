@@ -1,4 +1,4 @@
-export type PersistMode = 'LOCAL' | 'SESSION' | 'NONE';
+export type PersistMode = 'LOCAL' | 'SESSION' | 'NONE'
 
 const getStorageApi = (mode: PersistMode) => {
     switch (mode) {
@@ -6,22 +6,22 @@ const getStorageApi = (mode: PersistMode) => {
             return {
                 getItem: () => undefined,
                 setItem: () => undefined,
-            };
+            }
         case 'LOCAL':
-            return window.localStorage;
+            return window.localStorage
         case 'SESSION':
-            return window.sessionStorage;
+            return window.sessionStorage
     }
-};
+}
 
 export const persist = (namespace: string, key: string, data: any, mode: PersistMode = 'LOCAL') => {
-    getStorageApi(mode).setItem(`${namespace}-${key}`, JSON.stringify(data));
-};
+    getStorageApi(mode).setItem(`${namespace}-${key}`, JSON.stringify(data))
+}
 
 export const restore = (namespace: string, key: string, defaultValue: any = {}, mode: PersistMode = 'LOCAL') => {
-    const jsonRawData = getStorageApi(mode).getItem(`${namespace}-${key}`);
+    const jsonRawData = getStorageApi(mode).getItem(`${namespace}-${key}`)
     if (jsonRawData) {
-        return JSON.parse(jsonRawData);
+        return JSON.parse(jsonRawData)
     }
-    return defaultValue;
-};
+    return defaultValue
+}

@@ -32,4 +32,4 @@ export const defaultDarkTheme = {
             '@global': {},
         },
     },
-} as any;
+} as any

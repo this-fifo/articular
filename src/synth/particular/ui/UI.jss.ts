@@ -1,5 +1,5 @@
-import { makeStyles } from '@material-ui/styles';
-import { Theme } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles'
+import { Theme } from '@material-ui/core'
 
 export const getClasses = makeStyles(({ palette }: Theme) => ({
     smallCaption: {
@@ -125,4 +125,4 @@ export const getClasses = makeStyles(({ palette }: Theme) => ({
         height: 25,
         fontSize: '0.8rem',
     },
-}));
+}))

@@ -1,8 +1,8 @@
-import { AdvancedModulationType } from '../interface/AdvancedModulationType';
-import { FilterType } from '../interface/FilterType';
-import { Module } from '../interface/Module';
-import { Preset } from '../interface/Preset';
-import { WaveForm } from '../interface/Waveform';
+import { AdvancedModulationType } from '../interface/AdvancedModulationType'
+import { FilterType } from '../interface/FilterType'
+import { Module } from '../interface/Module'
+import { Preset } from '../interface/Preset'
+import { WaveForm } from '../interface/Waveform'
 
 export const initPreset: Preset = {
     id: 'init',
@@ -308,4 +308,4 @@ export const initPreset: Preset = {
             glide: 0.1,
         },
     },
-};
+}

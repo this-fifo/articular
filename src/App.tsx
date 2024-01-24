@@ -1,6 +1,6 @@
-import './App.css';
-import React from 'react';
-import { Particular } from './synth/particular/Particular';
+import './App.css'
+import React from 'react'
+import { Particular } from './synth/particular/Particular'
 
 function App() {
     return (
@@ -17,7 +17,7 @@ function App() {
                 <Particular instanceId={'particular-1'} />
             </div>
         </div>
-    );
+    )
 }
 
-export default App;
+export default App

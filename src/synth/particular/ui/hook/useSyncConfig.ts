@@ -1,5 +1,5 @@
-import { EVENT_OPTIONS_CHANGED } from '../../bus/OptionsBusManager';
-import { TinyEventBus } from '../../bus/TinyEventBus';
+import { EVENT_OPTIONS_CHANGED } from '../../bus/OptionsBusManager'
+import { TinyEventBus } from '../../bus/TinyEventBus'
 
 export const useSyncConfig = (
     optionsBusContext: TinyEventBus<any>,
@@ -12,18 +12,18 @@ export const useSyncConfig = (
         [oscName]: {
             [param]: value,
         },
-    };
+    }
 
     if (childKey) {
-        delete configObject[oscName][param];
+        delete configObject[oscName][param]
 
         configObject[oscName] = {
             [childKey]: {
                 [param]: value,
             },
-        };
+        }
     }
 
-    console.log('configObject', configObject);
-    optionsBusContext.publish(EVENT_OPTIONS_CHANGED, configObject);
-};
+    console.log('configObject', configObject)
+    optionsBusContext.publish(EVENT_OPTIONS_CHANGED, configObject)
+}

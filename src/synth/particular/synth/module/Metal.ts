@@ -1,29 +1,29 @@
-import { debounce } from '@material-ui/core';
-import * as Tone from 'tone';
-import { MetalSynthOptions } from 'tone';
-import { mergeOptions } from '../function/mergeOptions';
-import { MetalOptions } from '../interface/MetalOptions';
-import { Note } from '../interface/Note';
-import { AbstractModule } from './AbstractModule';
+import { debounce } from '@material-ui/core'
+import * as Tone from 'tone'
+import { MetalSynthOptions } from 'tone'
+import { mergeOptions } from '../function/mergeOptions'
+import { MetalOptions } from '../interface/MetalOptions'
+import { Note } from '../interface/Note'
+import { AbstractModule } from './AbstractModule'
 
 export class Metal extends AbstractModule<MetalOptions> {
-    readonly gainNode = new Tone.Gain();
-    readonly toneNode = new Tone.MetalSynth();
+    readonly gainNode = new Tone.Gain()
+    readonly toneNode = new Tone.MetalSynth()
 
-    protected prevNote?: Note;
-    readonly pannerNode = new Tone.Panner();
+    protected prevNote?: Note
+    readonly pannerNode = new Tone.Panner()
 
     getRouting() {
-        return [this.pannerNode, this.gainNode, this.destination];
+        return [this.pannerNode, this.gainNode, this.destination]
     }
 
     set(options: MetalOptions) {
-        super.set(options);
+        super.set(options)
 
         if (this.pannerNode) {
             this.pannerNode.set({
                 pan: options.pan || 0,
-            });
+            })
         }
     }
 
@@ -32,20 +32,20 @@ export class Metal extends AbstractModule<MetalOptions> {
             `${note.name}${note.octave + (this.options?.octave || 0)}`,
             Tone.now(),
             note.velocity,
-        );
-    }, 20) as (note: Note) => void;
+        )
+    }, 20) as (note: Note) => void
 
     noteOff(note: Note) {
-        this.toneNode.triggerRelease(Tone.now());
+        this.toneNode.triggerRelease(Tone.now())
     }
 
     getOptions(options: MetalOptions) {
-        const _options = mergeOptions(this.options, options);
+        const _options = mergeOptions(this.options, options)
 
-        (_options as MetalSynthOptions).detune = _options?.detune || 0;
+        ;(_options as MetalSynthOptions).detune = _options?.detune || 0
 
-        _options!.portamento = _options?.glide;
+        _options!.portamento = _options?.glide
 
-        return _options;
+        return _options
     }
 }

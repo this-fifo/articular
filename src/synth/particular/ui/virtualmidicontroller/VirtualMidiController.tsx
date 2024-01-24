@@ -1,4 +1,4 @@
-import Grid from '@material-ui/core/Grid';
+import Grid from '@material-ui/core/Grid'
 import React, {
     createContext,
     Fragment,
@@ -8,37 +8,37 @@ import React, {
     useContext,
     useEffect,
     useState,
-} from 'react';
-import { useEvent } from 'react-use';
-import { EVENT_NOTE_OFF, EVENT_NOTE_ON, NoteBusContext } from '../../bus/NoteBusManager';
-import { getKeyboardShortcutsForNote } from './function/getKeyboardShortcutsForNote';
-import { getNotesBetween } from './function/getNotesBetween';
-import { isAccidentalNote } from './function/isAccidentialNote';
-import { isRegularKey } from './function/isRegularKey';
-import { getClasses } from './VirtualMidiController.jss';
+} from 'react'
+import { useEvent } from 'react-use'
+import { EVENT_NOTE_OFF, EVENT_NOTE_ON, NoteBusContext } from '../../bus/NoteBusManager'
+import { getKeyboardShortcutsForNote } from './function/getKeyboardShortcutsForNote'
+import { getNotesBetween } from './function/getNotesBetween'
+import { isAccidentalNote } from './function/isAccidentialNote'
+import { isRegularKey } from './function/isRegularKey'
+import { getClasses } from './VirtualMidiController.jss'
 
 export interface RenderPianoKeyProps {
-    note: string;
-    isNoteAccidental: boolean;
-    isNotePlaying: boolean;
-    startPlayingNote: (note: any) => void;
-    stopPlayingNote: (note: any) => void;
-    keyboardShortcuts: Array<any>;
+    note: string
+    isNoteAccidental: boolean
+    isNotePlaying: boolean
+    startPlayingNote: (note: any) => void
+    stopPlayingNote: (note: any) => void
+    keyboardShortcuts: Array<any>
 }
 
 export const PianoContainer = memo(({ children }: PropsWithChildren<any>) => {
-    const classes = getClasses();
+    const classes = getClasses()
     return (
         <div className={classes.container} onMouseDown={(event) => event.preventDefault()}>
             {children}
         </div>
-    );
-});
+    )
+})
 
 export const AccidentalKey = memo(({ isPlaying, text, eventHandlers }: any) => {
-    const classes = getClasses();
-    const keyboardMap = useContext(KeyboardMapContext);
-    const key = keyboardMap[text] || '';
+    const classes = getClasses()
+    const keyboardMap = useContext(KeyboardMapContext)
+    const key = keyboardMap[text] || ''
     return (
         <div className={classes.accidentialKeyWrapper}>
             <button
@@ -49,22 +49,22 @@ export const AccidentalKey = memo(({ isPlaying, text, eventHandlers }: any) => {
                 <div className={classes.accidentialText}>{text}</div>
             </button>
         </div>
-    );
-});
+    )
+})
 
 export const NaturalKey = memo(({ isPlaying, text, eventHandlers }: any) => {
-    const classes = getClasses();
-    const keyboardMap = useContext(KeyboardMapContext);
+    const classes = getClasses()
+    const keyboardMap = useContext(KeyboardMapContext)
 
-    const key = keyboardMap[text] || '';
+    const key = keyboardMap[text] || ''
 
     return (
         <button className={`${classes.naturalKey} ${isPlaying ? classes.naturalKeyPlaying : ''}`} {...eventHandlers}>
             <div className={classes.textKey}>{key.substring(0, key.length - 1)}</div>
             <div className={classes.text}>{text}</div>
         </button>
-    );
-});
+    )
+})
 
 export const PianoKey = memo(
     ({
@@ -75,16 +75,16 @@ export const PianoKey = memo(
         stopPlayingNote,
         keyboardShortcuts,
     }: RenderPianoKeyProps) => {
-        const [eventHandlers, setEventHandlers] = useState({});
+        const [eventHandlers, setEventHandlers] = useState({})
 
         const handleMouseEnter = useCallback(
             (event: any) => {
                 if (event.buttons) {
-                    startPlayingNote(note);
+                    startPlayingNote(note)
                 }
             },
             [startPlayingNote, note],
-        );
+        )
 
         useEffect(() => {
             setEventHandlers({
@@ -94,8 +94,8 @@ export const PianoKey = memo(
                 onMouseUp: () => stopPlayingNote(note),
                 onMouseOut: () => stopPlayingNote(note),
                 onTouchEnd: () => stopPlayingNote(note),
-            });
-        }, [setEventHandlers, startPlayingNote, stopPlayingNote]);
+            })
+        }, [setEventHandlers, startPlayingNote, stopPlayingNote])
 
         return isNoteAccidental ? (
             <AccidentalKey
@@ -105,48 +105,48 @@ export const PianoKey = memo(
             />
         ) : (
             <NaturalKey isPlaying={isNotePlaying} text={keyboardShortcuts.join(' / ')} eventHandlers={eventHandlers} />
-        );
+        )
     },
-);
+)
 
 export interface PianoKeyboardMap {
-    [key: string]: string;
+    [key: string]: string
 }
 
-export const KeyboardMapContext = createContext<PianoKeyboardMap>({});
+export const KeyboardMapContext = createContext<PianoKeyboardMap>({})
 
 export interface InstrumentAudioProps {
-    notes: Array<any>;
+    notes: Array<any>
 }
 
 export interface InstrumentProps {
-    renderInstrument: any;
-    renderAudio: any;
-    keyboardMap: any;
+    renderInstrument: any
+    renderAudio: any
+    keyboardMap: any
 }
 
 export const Instrument = memo(
     ({ keyboardMap, renderAudio, renderInstrument: CustomInstrument }: InstrumentProps): any => {
         const [notesPlaying, setNotesPlaying] = useState<{
-            notesPlaying: Array<any>;
-            stopNotes: Array<any>;
-            startNotes: Array<any>;
+            notesPlaying: Array<any>
+            stopNotes: Array<any>
+            startNotes: Array<any>
         }>({
             notesPlaying: [],
             stopNotes: [],
             startNotes: [],
-        });
+        })
 
         useEffect(() => {
-            renderAudio({ notes: notesPlaying });
-        }, [notesPlaying, renderAudio]);
+            renderAudio({ notes: notesPlaying })
+        }, [notesPlaying, renderAudio])
 
         const getNoteFromKeyboardKey = useCallback(
             (keyboardKey: any) => {
-                return keyboardMap[keyboardKey.toUpperCase()];
+                return keyboardMap[keyboardKey.toUpperCase()]
             },
             [keyboardMap],
-        );
+        )
 
         const startPlayingNote = useCallback(
             (note: any) => {
@@ -154,52 +154,52 @@ export const Instrument = memo(
                     notesPlaying: [...notesPlaying, note],
                     startNotes: [note],
                     stopNotes: [],
-                }));
+                }))
             },
             [setNotesPlaying],
-        );
+        )
 
         const onKeyDown = useCallback(
             (event: KeyboardEvent) => {
                 if (!event.repeat) {
-                    console.log('onKeyDown');
+                    console.log('onKeyDown')
                 }
                 if (isRegularKey(event) && !event.repeat) {
-                    const note = getNoteFromKeyboardKey(event.key);
+                    const note = getNoteFromKeyboardKey(event.key)
                     if (note) {
-                        startPlayingNote(note);
+                        startPlayingNote(note)
                     }
                 }
             },
             [setNotesPlaying],
-        );
+        )
 
-        useEvent('keydown', onKeyDown);
+        useEvent('keydown', onKeyDown)
 
         const stopPlayingNote = useCallback(
             (note: any) => {
                 setNotesPlaying(({ notesPlaying }: any) => {
-                    console.log('notesPlaying', notesPlaying);
+                    console.log('notesPlaying', notesPlaying)
                     return {
                         notesPlaying: notesPlaying.filter((notePlaying: any) => notePlaying !== note),
                         stopNotes: notesPlaying.filter((notePlaying: any) => notePlaying === note),
                         startNotes: [],
-                    };
-                });
+                    }
+                })
             },
             [setNotesPlaying],
-        );
+        )
 
         const onKeyUp = useCallback((event: KeyboardEvent) => {
             if (isRegularKey(event)) {
-                const note = getNoteFromKeyboardKey(event.key);
+                const note = getNoteFromKeyboardKey(event.key)
                 if (note) {
-                    stopPlayingNote(note);
+                    stopPlayingNote(note)
                 }
             }
-        }, []);
+        }, [])
 
-        useEvent('keyup', onKeyUp);
+        useEvent('keyup', onKeyUp)
 
         return (
             <Fragment>
@@ -209,12 +209,12 @@ export const Instrument = memo(
                     stopPlayingNote={stopPlayingNote}
                 />
             </Fragment>
-        );
+        )
     },
-);
+)
 
 export const Piano = memo(({ startNote, endNote, keyboardMap, renderPianoKey, renderAudio }: any) => {
-    const notes = getNotesBetween(startNote, endNote);
+    const notes = getNotesBetween(startNote, endNote)
 
     return (
         <Instrument
@@ -235,21 +235,21 @@ export const Piano = memo(({ startNote, endNote, keyboardMap, renderPianoKey, re
             }
             renderAudio={renderAudio}
         />
-    );
-});
+    )
+})
 
-export const VELOCITY_MIDI_MID = 0.5;
+export const VELOCITY_MIDI_MID = 0.5
 
 export const VirtualMidiController = memo(() => {
-    const classes = getClasses();
-    const noteBusContext = useContext(NoteBusContext);
+    const classes = getClasses()
+    const noteBusContext = useContext(NoteBusContext)
 
-    const [velocity, setVelocity] = useState(VELOCITY_MIDI_MID);
-    const [relativeOctave, setRelativeOcatve] = useState(3);
+    const [velocity, setVelocity] = useState(VELOCITY_MIDI_MID)
+    const [relativeOctave, setRelativeOcatve] = useState(3)
 
     useEffect(() => {
         // TODO: re-define keyboardMap!
-    }, [relativeOctave]);
+    }, [relativeOctave])
 
     const [keyboardMap, setKeyboardMap] = useState({
         A: 'C3',
@@ -274,47 +274,48 @@ export const VirtualMidiController = memo(() => {
         '+': 'F#4',
         '#': 'G4',
         */
-    });
+    })
 
     const renderPianoKey = useCallback(
         () => (pianoKeyProps: RenderPianoKeyProps) => <PianoKey {...pianoKeyProps} />,
         [],
-    );
+    )
 
     const propagateNote = useCallback(
         (event: string, note: string) => {
-            const octave = parseInt(note.substring(note.length - 1, note.length), 10);
-            const noteName = note.substring(0, note.length - 1);
+            const octave = parseInt(note.substring(note.length - 1, note.length), 10)
+            const noteName = note.substring(0, note.length - 1)
 
             noteBusContext.publish(event, {
                 name: noteName,
                 octave, // TODO: +relativeOctave
                 velocity,
-            });
+            })
         },
         [noteBusContext, velocity, relativeOctave],
-    );
+    )
 
     const onNotesPlayedChange = useCallback(
-        () => ({
-            notes, // (Array) An array of the currently playing notes
-        }: any) => {
-            if (!notes.startNotes.length && !notes.stopNotes.length) return;
-            /* Play the given notes and render the audio (or return null) */
-            if (notes.startNotes.length) {
-                notes.startNotes.forEach((note: string) => {
-                    propagateNote(EVENT_NOTE_ON, note);
-                });
-            }
+        () =>
+            ({
+                notes, // (Array) An array of the currently playing notes
+            }: any) => {
+                if (!notes.startNotes.length && !notes.stopNotes.length) return
+                /* Play the given notes and render the audio (or return null) */
+                if (notes.startNotes.length) {
+                    notes.startNotes.forEach((note: string) => {
+                        propagateNote(EVENT_NOTE_ON, note)
+                    })
+                }
 
-            if (notes.stopNotes.length) {
-                notes.stopNotes.forEach((note: string) => {
-                    propagateNote(EVENT_NOTE_OFF, note);
-                });
-            }
-        },
+                if (notes.stopNotes.length) {
+                    notes.stopNotes.forEach((note: string) => {
+                        propagateNote(EVENT_NOTE_OFF, note)
+                    })
+                }
+            },
         [propagateNote],
-    );
+    )
 
     return (
         <Grid container>
@@ -335,5 +336,5 @@ export const VirtualMidiController = memo(() => {
                 </KeyboardMapContext.Provider>
             </Grid>
         </Grid>
-    );
-});
+    )
+})

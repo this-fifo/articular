@@ -1,42 +1,42 @@
-import { Checkbox, Grid, Paper, Slider, TextField, Typography } from '@material-ui/core';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { Knob } from 'react-rotary-knob';
-import { OptionsBusContext, EVENT_OPTIONS_CHANGED } from '../../../../bus/OptionsBusManager';
-import { EVENT_SIGNAL_CONNECT, SignalsBusContext } from '../../../../bus/SignalsBusManager';
-import { ArticularContext, OptionsContext } from '../../../../Particular';
-import * as skins from 'react-rotary-knob-skin-pack';
-import { getClasses } from './MasterFilter.jss';
-import { getClasses as getUiClasses } from '../../../UI.jss';
-import { ArticularOptions } from '../../../../synth/interface/ArticularOptions';
-import { debounce } from '../../../../synth/function/debounce';
-import { RecursivePartial } from '../../../../synth/interface/RecursivePartial';
-import { mergeOptions } from '../../../../synth/function/mergeOptions';
-import { WaveForm } from '../../../../synth/interface/Waveform';
-import { PWMOscillatorOptions } from 'tone';
-import { useSyncConfig } from '../../../hook/useSyncConfig';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import { Rolloff } from '../../../../synth/interface/Rolloff';
-import { enumToArray } from '../../../function/enumToArray';
-import { FilterType } from '../../../../synth/interface/FilterType';
-import { useDrop } from 'react-dnd';
-import { Module } from '../../../../synth/interface/Module';
-import useResizeObserver from 'use-resize-observer';
-import { useLatest, useUpdate } from 'react-use';
+import { Checkbox, Grid, Paper, Slider, TextField, Typography } from '@material-ui/core'
+import ToggleButton from '@material-ui/lab/ToggleButton'
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup'
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { Knob } from 'react-rotary-knob'
+import { OptionsBusContext, EVENT_OPTIONS_CHANGED } from '../../../../bus/OptionsBusManager'
+import { EVENT_SIGNAL_CONNECT, SignalsBusContext } from '../../../../bus/SignalsBusManager'
+import { ArticularContext, OptionsContext } from '../../../../Particular'
+import * as skins from 'react-rotary-knob-skin-pack'
+import { getClasses } from './MasterFilter.jss'
+import { getClasses as getUiClasses } from '../../../UI.jss'
+import { ArticularOptions } from '../../../../synth/interface/ArticularOptions'
+import { debounce } from '../../../../synth/function/debounce'
+import { RecursivePartial } from '../../../../synth/interface/RecursivePartial'
+import { mergeOptions } from '../../../../synth/function/mergeOptions'
+import { WaveForm } from '../../../../synth/interface/Waveform'
+import { PWMOscillatorOptions } from 'tone'
+import { useSyncConfig } from '../../../hook/useSyncConfig'
+import Select from '@material-ui/core/Select'
+import MenuItem from '@material-ui/core/MenuItem'
+import { Rolloff } from '../../../../synth/interface/Rolloff'
+import { enumToArray } from '../../../function/enumToArray'
+import { FilterType } from '../../../../synth/interface/FilterType'
+import { useDrop } from 'react-dnd'
+import { Module } from '../../../../synth/interface/Module'
+import useResizeObserver from 'use-resize-observer'
+import { useLatest, useUpdate } from 'react-use'
 
-const defaultCutoff = 0;
+const defaultCutoff = 0
 
 export const MasterFilter = () => {
-    const classes = getClasses();
-    const uiClasses = getUiClasses();
-    const { ref: resizeRef, width = 1, height = 1 } = useResizeObserver<HTMLDivElement>();
+    const classes = getClasses()
+    const uiClasses = getUiClasses()
+    const { ref: resizeRef, width = 1, height = 1 } = useResizeObserver<HTMLDivElement>()
 
-    const articular = useContext(ArticularContext);
-    const optionsContext = useContext(OptionsContext);
-    const optionsBusContext = useContext(OptionsBusContext);
-    const signalsBusContext = useContext(SignalsBusContext);
+    const articular = useContext(ArticularContext)
+    const optionsContext = useContext(OptionsContext)
+    const optionsBusContext = useContext(OptionsBusContext)
+    const signalsBusContext = useContext(SignalsBusContext)
 
     const onSwitchConnected = useCallback(
         () => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,94 +45,94 @@ export const MasterFilter = () => {
                 masterFilter: {
                     enabled: event.target.checked,
                 },
-            });
+            })
         },
         [optionsContext],
-    );
+    )
 
     const onSetDebounced = useCallback(
         (param: string, debounceTime: number, childKey?: string) =>
             debounce((value: any) => {
-                useSyncConfig(optionsBusContext, 'masterFilter', param, value, childKey);
+                useSyncConfig(optionsBusContext, 'masterFilter', param, value, childKey)
             }, debounceTime),
         [optionsBusContext],
-    );
+    )
 
-    const [cutoff, setCutoff] = useState<number>((optionsContext!['masterFilter'] as any).cutoff || defaultCutoff);
-    const syncCutoff = onSetDebounced('cutoff', 1);
+    const [cutoff, setCutoff] = useState<number>((optionsContext!['masterFilter'] as any).cutoff || defaultCutoff)
+    const syncCutoff = onSetDebounced('cutoff', 1)
 
     useEffect(() => {
-        setCutoff(optionsContext?.masterFilter.cutoff || defaultCutoff);
-    }, [optionsContext?.masterFilter.cutoff]);
+        setCutoff(optionsContext?.masterFilter.cutoff || defaultCutoff)
+    }, [optionsContext?.masterFilter.cutoff])
 
-    console.log('cutoff', cutoff);
+    console.log('cutoff', cutoff)
     const onCutoffChange = useCallback(
         () => (cutoff: number) => {
-            setCutoff(cutoff);
-            syncCutoff(cutoff);
+            setCutoff(cutoff)
+            syncCutoff(cutoff)
         },
         [setCutoff],
-    );
+    )
 
-    const [drive, setDrive] = useState<number>((optionsContext!['masterFilter'] as any).drive || 0);
-    const syncDrive = onSetDebounced('drive', 1);
+    const [drive, setDrive] = useState<number>((optionsContext!['masterFilter'] as any).drive || 0)
+    const syncDrive = onSetDebounced('drive', 1)
 
     const onDriveChange = useCallback(
         () => (drive: number) => {
-            setDrive(drive / 100);
-            syncDrive(drive / 100);
+            setDrive(drive / 100)
+            syncDrive(drive / 100)
         },
         [setDrive],
-    );
+    )
 
-    const [resonance, setResonance] = useState<number>((optionsContext!['masterFilter'] as any).resonance || 0);
-    const syncResonance = onSetDebounced('resonance', 1);
+    const [resonance, setResonance] = useState<number>((optionsContext!['masterFilter'] as any).resonance || 0)
+    const syncResonance = onSetDebounced('resonance', 1)
 
     const onResonanceChange = useCallback(
         () => (resonance: number) => {
-            setResonance(resonance);
-            syncResonance(resonance);
+            setResonance(resonance)
+            syncResonance(resonance)
         },
         [setResonance],
-    );
+    )
 
     // === TYPE
 
-    const syncType = onSetDebounced('type', 1);
-    const [type, setType] = useState((optionsContext!['masterFilter'] as any).type);
+    const syncType = onSetDebounced('type', 1)
+    const [type, setType] = useState((optionsContext!['masterFilter'] as any).type)
 
     const onTypeChange = useCallback(
         () => (event: React.ChangeEvent<any>, value: any) => {
-            syncType(event.target.value);
-            setType(event.target.value);
+            syncType(event.target.value)
+            setType(event.target.value)
         },
         [],
-    );
+    )
 
     // === TYPE
 
-    const syncRolloff = onSetDebounced('rolloff', 1);
-    const [rolloff, setRolloff] = useState<number>((optionsContext!['masterFilter'] as any).rolloff as number);
+    const syncRolloff = onSetDebounced('rolloff', 1)
+    const [rolloff, setRolloff] = useState<number>((optionsContext!['masterFilter'] as any).rolloff as number)
 
     const onRolloffChange = useCallback(
         () => (event: React.ChangeEvent<any>, value: any) => {
-            syncRolloff(event.target.value);
-            setRolloff(event.target.value);
+            syncRolloff(event.target.value)
+            setRolloff(event.target.value)
         },
         [],
-    );
+    )
 
     // === DETUNE
 
-    const syncDetune = onSetDebounced('detune', 1);
+    const syncDetune = onSetDebounced('detune', 1)
 
     const onDetuneChange = useCallback(
         () => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-            syncDetune(parseInt(event.target.value, 10) || 0);
+            syncDetune(parseInt(event.target.value, 10) || 0)
         },
         [],
-    );
-    const [chartData, setChartData] = useState([{ x: 0, y: 0 }]);
+    )
+    const [chartData, setChartData] = useState([{ x: 0, y: 0 }])
 
     useEffect(() => {
         switch (type) {
@@ -141,51 +141,51 @@ export const MasterFilter = () => {
                     { x: ((Math.abs(rolloff) - 100) / 100) * cutoff, y: 0 }, // 0 Hz
                     { x: cutoff, y: 50 },
                     { x: 20000, y: 50 }, // niquist freq.
-                ]);
-                break;
+                ])
+                break
             case FilterType.HIGHPASS:
                 setChartData([
                     { x: 0, y: 50 }, // 0 Hz
                     { x: cutoff, y: 50 },
                     // TODO: rolloff
                     { x: 20000 - ((Math.abs(rolloff) - 100) / 100) * cutoff, y: 0 }, // niquist freq.
-                ]);
-                break;
+                ])
+                break
             default:
                 setChartData([
                     // TODO
                     { x: 0, y: 50 }, // 0 Hz
                     { x: 0, y: 50 },
-                ]);
+                ])
         }
-    }, [cutoff, type, width, rolloff]);
+    }, [cutoff, type, width, rolloff])
 
-    const dragTargetCutoff = useRef<HTMLDivElement | null>(null);
+    const dragTargetCutoff = useRef<HTMLDivElement | null>(null)
     const [, drop] = useDrop({
         accept: 'lfo',
         hover: () => {
-            console.log('style over', dragTargetCutoff.current);
+            console.log('style over', dragTargetCutoff.current)
 
             if (dragTargetCutoff.current) {
-                dragTargetCutoff.current.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                dragTargetCutoff.current.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'
             }
         },
         collect: (monitor) => {
             if (!monitor.didDrop()) {
-                console.log('unstyle out of region', dragTargetCutoff.current);
+                console.log('unstyle out of region', dragTargetCutoff.current)
 
                 if (dragTargetCutoff.current) {
-                    dragTargetCutoff.current.style.backgroundColor = 'inherit';
+                    dragTargetCutoff.current.style.backgroundColor = 'inherit'
                 }
             }
         },
         drop: (item: any) => {
-            console.log('dropped an LFO to connect with cutoff', item);
+            console.log('dropped an LFO to connect with cutoff', item)
 
-            console.log('unstyle drop on');
+            console.log('unstyle drop on')
 
             if (dragTargetCutoff.current) {
-                dragTargetCutoff.current.style.backgroundColor = 'inherit';
+                dragTargetCutoff.current.style.backgroundColor = 'inherit'
             }
 
             if (articular) {
@@ -198,10 +198,10 @@ export const MasterFilter = () => {
                         module: Module.MASTER_FILTER,
                         signalId: 'frequency',
                     },
-                });
+                })
             }
         },
-    });
+    })
 
     return (
         <div className={classes.root}>
@@ -364,39 +364,39 @@ export const MasterFilter = () => {
                 </Grid>
             </Paper>
         </div>
-    );
-};
+    )
+}
 
 export interface GraphPoint {
-    x: number;
-    y: number;
+    x: number
+    y: number
 }
 
 export interface EnvelopeGraphProps {
-    data: Array<GraphPoint>;
-    height: number;
-    width: number;
+    data: Array<GraphPoint>
+    height: number
+    width: number
 }
 
 export const LineChart = ({ data, width }: EnvelopeGraphProps) => {
-    const WIDTH = width;
-    const classes = getClasses();
-    const HEIGHT = 120;
-    const MAX_X = Math.max(...data.map((d: any) => d.x));
-    const MAX_Y = Math.max(...data.map((d: any) => d.y));
+    const WIDTH = width
+    const classes = getClasses()
+    const HEIGHT = 120
+    const MAX_X = Math.max(...data.map((d: any) => d.x))
+    const MAX_Y = Math.max(...data.map((d: any) => d.y))
 
-    const x = (val: number) => (val / MAX_X) * WIDTH;
-    const y = (val: number) => HEIGHT - (val / MAX_Y) * HEIGHT + 50;
+    const x = (val: number) => (val / MAX_X) * WIDTH
+    const y = (val: number) => HEIGHT - (val / MAX_Y) * HEIGHT + 50
 
     const d = `
         M${x(data[0].x)} ${y(data[0].y)} 
         ${data
             .slice(1)
             .map((d: any) => {
-                return `L${x(d.x)} ${y(d.y)}`;
+                return `L${x(d.x)} ${y(d.y)}`
             })
             .join(' ')}
-    `;
+    `
 
     return (
         <div
@@ -427,5 +427,5 @@ export const LineChart = ({ data, width }: EnvelopeGraphProps) => {
                 )}
             </svg>
         </div>
-    );
-};
+    )
+}

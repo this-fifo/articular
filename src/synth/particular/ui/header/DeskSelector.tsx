@@ -1,13 +1,13 @@
-import { AppBar, Tabs, Tab } from '@material-ui/core';
-import React, { useContext } from 'react';
-import { getClasses } from './DeskSelector.jss';
-import MultilineChartIcon from '@material-ui/icons/MultilineChart';
-import AcUnitIcon from '@material-ui/icons/AcUnit';
-import SettingsEthernetIcon from '@material-ui/icons/SettingsEthernet';
-import SettingsIcon from '@material-ui/icons/Settings';
-import { DeskChangeEvent, DESK_CHANGE, UIBusContext } from '../../bus/UIBusManager';
-import { useState } from 'react';
-import { useEffectOnce } from 'react-use';
+import { AppBar, Tabs, Tab } from '@material-ui/core'
+import React, { useContext } from 'react'
+import { getClasses } from './DeskSelector.jss'
+import MultilineChartIcon from '@material-ui/icons/MultilineChart'
+import AcUnitIcon from '@material-ui/icons/AcUnit'
+import SettingsEthernetIcon from '@material-ui/icons/SettingsEthernet'
+import SettingsIcon from '@material-ui/icons/Settings'
+import { DeskChangeEvent, DESK_CHANGE, UIBusContext } from '../../bus/UIBusManager'
+import { useState } from 'react'
+import { useEffectOnce } from 'react-use'
 
 export enum Desk {
     OSC,
@@ -17,22 +17,22 @@ export enum Desk {
 }
 
 export const DeskSelector = () => {
-    const classes = getClasses();
-    const uiBusContext = useContext(UIBusContext);
-    const [activeDesk, setActiveDesk] = useState(Desk.OSC);
+    const classes = getClasses()
+    const uiBusContext = useContext(UIBusContext)
+    const [activeDesk, setActiveDesk] = useState(Desk.OSC)
 
     const onDeskChange = (evt: any, desk: Desk) => {
-        console.log('onDeskChange', desk);
+        console.log('onDeskChange', desk)
         uiBusContext.publish(DESK_CHANGE, {
             desk,
-        });
-    };
+        })
+    }
 
     useEffectOnce(() => {
         uiBusContext.subscribe(DESK_CHANGE, ({ desk }: DeskChangeEvent) => {
-            setActiveDesk(desk);
-        });
-    });
+            setActiveDesk(desk)
+        })
+    })
 
     return (
         <div className={classes.root}>
@@ -45,5 +45,5 @@ export const DeskSelector = () => {
                 </Tabs>
             </AppBar>
         </div>
-    );
-};
+    )
+}

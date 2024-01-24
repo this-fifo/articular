@@ -1,29 +1,29 @@
-import { ArticularContext, OptionsContext } from '../../Particular';
-import { getClasses } from './PresetSelector.jss';
-import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
-import React, { useContext, useEffect, useState } from 'react';
-import TextField from '@material-ui/core/TextField';
-import { Preset } from '../../synth/interface/Preset';
-import { EVENT_OPTIONS_CHANGED, OptionsBusContext } from '../../bus/OptionsBusManager';
+import { ArticularContext, OptionsContext } from '../../Particular'
+import { getClasses } from './PresetSelector.jss'
+import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete'
+import React, { useContext, useEffect, useState } from 'react'
+import TextField from '@material-ui/core/TextField'
+import { Preset } from '../../synth/interface/Preset'
+import { EVENT_OPTIONS_CHANGED, OptionsBusContext } from '../../bus/OptionsBusManager'
 
-const filter = createFilterOptions<Preset>();
+const filter = createFilterOptions<Preset>()
 
 export const PresetSelector = () => {
-    const classes = getClasses();
-    const articularContext = useContext(ArticularContext);
-    const optionsContext = useContext(OptionsContext);
-    const optionsBusContext = useContext(OptionsBusContext);
-    const [presets, setPresets] = useState<Array<Preset>>([]);
-    const [value, setValue] = useState<Preset | undefined>(articularContext?.getCurrentPreset());
+    const classes = getClasses()
+    const articularContext = useContext(ArticularContext)
+    const optionsContext = useContext(OptionsContext)
+    const optionsBusContext = useContext(OptionsBusContext)
+    const [presets, setPresets] = useState<Array<Preset>>([])
+    const [value, setValue] = useState<Preset | undefined>(articularContext?.getCurrentPreset())
 
     useEffect(() => {
-        const presetList = [];
-        const presetMap = articularContext?.getPresets() || {};
+        const presetList = []
+        const presetMap = articularContext?.getPresets() || {}
         for (const id in presetMap) {
-            presetList.push(presetMap[id]);
+            presetList.push(presetMap[id])
         }
-        setPresets(presetList);
-    }, [articularContext]);
+        setPresets(presetList)
+    }, [articularContext])
 
     return (
         <div className={classes.root}>
@@ -35,30 +35,30 @@ export const PresetSelector = () => {
                             id: Date.now() + '-preset',
                             name: newValue,
                             options: optionsContext!,
-                        });
+                        })
                     } else if (newValue && newValue.name) {
-                        console.log('select preset', newValue);
-                        setValue(newValue);
-                        optionsBusContext.publish(EVENT_OPTIONS_CHANGED, newValue.options);
+                        console.log('select preset', newValue)
+                        setValue(newValue)
+                        optionsBusContext.publish(EVENT_OPTIONS_CHANGED, newValue.options)
                     } else {
-                        setValue(newValue!);
+                        setValue(newValue!)
                     }
                 }}
                 filterOptions={(options, params) => {
-                    const filtered = filter(options, params);
+                    const filtered = filter(options, params)
 
                     const newPreset = {
                         id: params.inputValue.toLowerCase(),
                         name: params.inputValue,
                         options: optionsContext!,
-                    };
+                    }
 
-                    console.log('newPreset', JSON.stringify(newPreset, null, 4));
+                    console.log('newPreset', JSON.stringify(newPreset, null, 4))
 
                     if (params.inputValue !== '') {
-                        filtered.push(newPreset);
+                        filtered.push(newPreset)
                     }
-                    return filtered;
+                    return filtered
                 }}
                 selectOnFocus
                 clearOnBlur
@@ -66,9 +66,9 @@ export const PresetSelector = () => {
                 options={presets}
                 getOptionLabel={(option) => {
                     if (typeof option === 'string') {
-                        return option;
+                        return option
                     }
-                    return option.name;
+                    return option.name
                 }}
                 renderOption={(option) => option.name}
                 className={classes.presetField}
@@ -76,5 +76,5 @@ export const PresetSelector = () => {
                 renderInput={(params) => <TextField {...params} label="Preset..." variant="outlined" />}
             />
         </div>
-    );
-};
+    )
+}

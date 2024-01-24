@@ -1,1 +1,1 @@
-export type OscName = 'oscA' | 'oscB';
+export type OscName = 'oscA' | 'oscB'

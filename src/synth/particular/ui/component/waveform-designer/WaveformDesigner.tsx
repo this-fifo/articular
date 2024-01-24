@@ -1,81 +1,81 @@
-import { Modal, Typography } from '@material-ui/core';
-import React, { useCallback, useState, useContext } from 'react';
-import { getClasses } from './WaveformDesigner.jss';
-import { getClasses as getUiClasses } from '../../UI.jss';
-import { SineWave } from '../../component/SineWave';
-import Fade from '@material-ui/core/Fade';
-import { SineSurface, SinusSurfaceWaveSpacing } from '../../component/SineSurface';
-import { List } from 'immutable';
-import Paper from '@material-ui/core/Paper';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import { TabPanel } from '../TabPanel';
-import { debounce } from '../../../synth/function/debounce';
-import { OptionsBusContext } from '../../../bus/OptionsBusManager';
-import { OptionsContext } from '../../../Particular';
-import { OscName } from '../../../synth/interface/OscName';
-import { PolySynthOptions } from '../../../synth/interface/PolySynthOptions';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import { Add, Close, Remove, VolumeDown, VolumeUp } from '@material-ui/icons';
-import Slider from '@material-ui/core/Slider';
-import Grid from '@material-ui/core/Grid';
-import { useLatest } from 'react-use';
-import { useSyncConfig } from '../../hook/useSyncConfig';
-import { generatePeriodicWaveCoefficients } from '../../../synth/function/generatePeriodicWaveCoefficients';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
-import { WaveForm } from '../../../synth/interface/Waveform';
+import { Modal, Typography } from '@material-ui/core'
+import React, { useCallback, useState, useContext } from 'react'
+import { getClasses } from './WaveformDesigner.jss'
+import { getClasses as getUiClasses } from '../../UI.jss'
+import { SineWave } from '../../component/SineWave'
+import Fade from '@material-ui/core/Fade'
+import { SineSurface, SinusSurfaceWaveSpacing } from '../../component/SineSurface'
+import { List } from 'immutable'
+import Paper from '@material-ui/core/Paper'
+import AppBar from '@material-ui/core/AppBar'
+import Tabs from '@material-ui/core/Tabs'
+import Tab from '@material-ui/core/Tab'
+import { TabPanel } from '../TabPanel'
+import { debounce } from '../../../synth/function/debounce'
+import { OptionsBusContext } from '../../../bus/OptionsBusManager'
+import { OptionsContext } from '../../../Particular'
+import { OscName } from '../../../synth/interface/OscName'
+import { PolySynthOptions } from '../../../synth/interface/PolySynthOptions'
+import Avatar from '@material-ui/core/Avatar'
+import Button from '@material-ui/core/Button'
+import { Add, Close, Remove, VolumeDown, VolumeUp } from '@material-ui/icons'
+import Slider from '@material-ui/core/Slider'
+import Grid from '@material-ui/core/Grid'
+import { useLatest } from 'react-use'
+import { useSyncConfig } from '../../hook/useSyncConfig'
+import { generatePeriodicWaveCoefficients } from '../../../synth/function/generatePeriodicWaveCoefficients'
+import ButtonGroup from '@material-ui/core/ButtonGroup'
+import { WaveForm } from '../../../synth/interface/Waveform'
 
 export interface WaveformDesignerProps {
-    onClose: () => void;
-    open: boolean;
-    partialSines: List<List<number>>;
-    customWave: List<number>;
-    oscName: OscName;
+    onClose: () => void
+    open: boolean
+    partialSines: List<List<number>>
+    customWave: List<number>
+    oscName: OscName
 }
 
 export const WaveformDesigner = ({ open, onClose, partialSines, customWave, oscName }: WaveformDesignerProps) => {
-    const classes = getClasses();
-    const uiClasses = getUiClasses();
-    const optionsContext = useContext(OptionsContext);
-    const optionsBusContext = useContext(OptionsBusContext);
+    const classes = getClasses()
+    const uiClasses = getUiClasses()
+    const optionsContext = useContext(OptionsContext)
+    const optionsBusContext = useContext(OptionsBusContext)
 
-    console.log('WaveformDesigner NEW partialSines', optionsContext);
+    console.log('WaveformDesigner NEW partialSines', optionsContext)
 
     const onSetDebounced = useCallback(
         (param: string, debounceTime: number, childKey?: string) =>
             debounce((value: any) => {
-                console.log('syncSetPartialAmplitudes', oscName, param, value, childKey);
-                useSyncConfig(optionsBusContext, oscName, param, value, childKey);
+                console.log('syncSetPartialAmplitudes', oscName, param, value, childKey)
+                useSyncConfig(optionsBusContext, oscName, param, value, childKey)
             }, debounceTime),
         [optionsBusContext],
-    );
+    )
 
     const [partialAmplitudes, setPartialAmplitudes] = useState(
         ((optionsContext![oscName] as PolySynthOptions).oscillator! as any).partials || [1],
-    );
-    const syncSetPartialAmplitudes = onSetDebounced('partials', 0, 'oscillator');
+    )
+    const syncSetPartialAmplitudes = onSetDebounced('partials', 0, 'oscillator')
 
     const onRemoveHarmonic = useCallback(
         (index: number) => () => {
-            console.log('onRemoveHarmonic', index);
-            const newPartialAmplitudes = [...partialAmplitudes];
-            newPartialAmplitudes.splice(index, 1);
-            setPartialAmplitudes(newPartialAmplitudes);
-            syncSetPartialAmplitudes(newPartialAmplitudes);
+            console.log('onRemoveHarmonic', index)
+            const newPartialAmplitudes = [...partialAmplitudes]
+            newPartialAmplitudes.splice(index, 1)
+            setPartialAmplitudes(newPartialAmplitudes)
+            syncSetPartialAmplitudes(newPartialAmplitudes)
         },
         [partialAmplitudes],
-    );
+    )
 
     const onAddHarmonic = useCallback(
         () => () => {
-            const newPartialAmplitudes = [...partialAmplitudes, 0];
-            setPartialAmplitudes(newPartialAmplitudes);
-            syncSetPartialAmplitudes(newPartialAmplitudes);
+            const newPartialAmplitudes = [...partialAmplitudes, 0]
+            setPartialAmplitudes(newPartialAmplitudes)
+            syncSetPartialAmplitudes(newPartialAmplitudes)
         },
         [partialAmplitudes],
-    );
+    )
 
     /*
 
@@ -92,26 +92,26 @@ export const WaveformDesigner = ({ open, onClose, partialSines, customWave, oscN
 
     const onOvertoneAmplitudeChange = useCallback(
         (partialIndex: number) => (evt: any, newAplitude: any) => {
-            console.log('onOvertoneAmplitudeChange', partialIndex, 'newAplitude', newAplitude, partialAmplitudes);
+            console.log('onOvertoneAmplitudeChange', partialIndex, 'newAplitude', newAplitude, partialAmplitudes)
 
-            const newPartialAmplitudes = [...partialAmplitudes];
-            newPartialAmplitudes[partialIndex] = newAplitude;
+            const newPartialAmplitudes = [...partialAmplitudes]
+            newPartialAmplitudes[partialIndex] = newAplitude
 
-            setPartialAmplitudes(newPartialAmplitudes);
-            syncSetPartialAmplitudes(newPartialAmplitudes);
+            setPartialAmplitudes(newPartialAmplitudes)
+            syncSetPartialAmplitudes(newPartialAmplitudes)
         },
         [partialAmplitudes],
-    );
+    )
 
     const onStandardShapeClick = useCallback(
         (waveForm: WaveForm) => () => {
-            const partials = generatePeriodicWaveCoefficients(waveForm);
-            console.log('partials', partials);
-            setPartialAmplitudes(partials);
-            syncSetPartialAmplitudes(partials);
+            const partials = generatePeriodicWaveCoefficients(waveForm)
+            console.log('partials', partials)
+            setPartialAmplitudes(partials)
+            syncSetPartialAmplitudes(partials)
         },
         [],
-    );
+    )
 
     return (
         <Modal className={classes.waveFormDesignerModal} open={open} closeAfterTransition onClose={onClose}>
@@ -204,5 +204,5 @@ export const WaveformDesigner = ({ open, onClose, partialSines, customWave, oscN
                 </>
             </Fade>
         </Modal>
-    );
-};
+    )
+}

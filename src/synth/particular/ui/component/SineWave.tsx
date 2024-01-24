@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { useRef } from 'react';
-import { List } from 'immutable';
+import React, { useEffect, useState } from 'react'
+import { useRef } from 'react'
+import { List } from 'immutable'
 
 export interface SineWaveProps {
-    sineWaveControlPoints: List<number>;
-    width: number;
-    height: number;
-    color?: string;
+    sineWaveControlPoints: List<number>
+    width: number
+    height: number
+    color?: string
 }
 
 export const drawSineWave = (
@@ -16,11 +16,11 @@ export const drawSineWave = (
     controlPoints: List<number>,
     color: string,
 ): void => {
-    ctx.clearRect(0, 0, width, height);
+    ctx.clearRect(0, 0, width, height)
 
-    ctx.strokeStyle = '#ffffff';
+    ctx.strokeStyle = '#ffffff'
 
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 2
 
     // draw the centerline
     /*
@@ -31,41 +31,41 @@ export const drawSineWave = (
     */
 
     // draw the curve
-    ctx.strokeStyle = color;
+    ctx.strokeStyle = color
 
     // each data point in pixels
-    const step = width / controlPoints.size;
+    const step = width / controlPoints.size
 
     // reduce height so line is not cut off at top and bottom edges.
-    const effectiveHeight = height - ctx.lineWidth * 2;
+    const effectiveHeight = height - ctx.lineWidth * 2
     controlPoints.forEach((value, index) => {
-        const x = step * index;
-        const y = effectiveHeight + ctx.lineWidth - ((value + 1) / 2) * effectiveHeight;
+        const x = step * index
+        const y = effectiveHeight + ctx.lineWidth - ((value + 1) / 2) * effectiveHeight
         if (index === 0) {
-            ctx.moveTo(x, y);
-            ctx.beginPath();
+            ctx.moveTo(x, y)
+            ctx.beginPath()
         } else {
-            ctx.lineTo(x, y);
+            ctx.lineTo(x, y)
         }
-    });
-    ctx.stroke();
-};
+    })
+    ctx.stroke()
+}
 
 export const SineWave = ({ width, height, sineWaveControlPoints, color = '#33C7FF' }: SineWaveProps) => {
-    const canvasRef = useRef<HTMLCanvasElement>(null);
-    const [ctx, setCtx] = useState<CanvasRenderingContext2D>();
+    const canvasRef = useRef<HTMLCanvasElement>(null)
+    const [ctx, setCtx] = useState<CanvasRenderingContext2D>()
 
     useEffect(() => {
         if (canvasRef.current) {
-            setCtx(canvasRef.current.getContext('2d') as CanvasRenderingContext2D);
+            setCtx(canvasRef.current.getContext('2d') as CanvasRenderingContext2D)
         }
-    }, [canvasRef.current]);
+    }, [canvasRef.current])
 
     useEffect(() => {
         if (ctx) {
-            drawSineWave(ctx, width, height, sineWaveControlPoints, color);
+            drawSineWave(ctx, width, height, sineWaveControlPoints, color)
         }
-    }, [ctx, width, height, sineWaveControlPoints]);
+    }, [ctx, width, height, sineWaveControlPoints])
 
     return (
         <canvas
@@ -77,5 +77,5 @@ export const SineWave = ({ width, height, sineWaveControlPoints, color = '#33C7F
             }}
             ref={canvasRef}
         ></canvas>
-    );
-};
+    )
+}

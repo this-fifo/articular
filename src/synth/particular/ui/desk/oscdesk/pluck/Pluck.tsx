@@ -1,131 +1,131 @@
-import { Checkbox, debounce, Typography } from '@material-ui/core';
-import Grid from '@material-ui/core/Grid';
-import React, { useCallback, useContext, useRef, useState } from 'react';
-import { OptionsBusContext } from '../../../../bus/OptionsBusManager';
-import { OptionsContext } from '../../../../Particular';
-import { getClasses } from './Pluck.jss';
-import { getClasses as getUiClasses } from '../../../UI.jss';
-import { useSyncConfig } from '../../../hook/useSyncConfig';
-import TextField from '@material-ui/core/TextField';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import { WaveForm } from '../../../../synth/interface/Waveform';
-import * as skins from 'react-rotary-knob-skin-pack';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
-import { Knob } from 'react-rotary-knob';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import { NoiseType } from '../../../../synth/interface/NoiseType';
-import Paper from '@material-ui/core/Paper';
+import { Checkbox, debounce, Typography } from '@material-ui/core'
+import Grid from '@material-ui/core/Grid'
+import React, { useCallback, useContext, useRef, useState } from 'react'
+import { OptionsBusContext } from '../../../../bus/OptionsBusManager'
+import { OptionsContext } from '../../../../Particular'
+import { getClasses } from './Pluck.jss'
+import { getClasses as getUiClasses } from '../../../UI.jss'
+import { useSyncConfig } from '../../../hook/useSyncConfig'
+import TextField from '@material-ui/core/TextField'
+import ToggleButton from '@material-ui/lab/ToggleButton'
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup'
+import { WaveForm } from '../../../../synth/interface/Waveform'
+import * as skins from 'react-rotary-knob-skin-pack'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Switch from '@material-ui/core/Switch'
+import { Knob } from 'react-rotary-knob'
+import Select from '@material-ui/core/Select'
+import MenuItem from '@material-ui/core/MenuItem'
+import { NoiseType } from '../../../../synth/interface/NoiseType'
+import Paper from '@material-ui/core/Paper'
 
 export const Pluck = () => {
-    const classes = getClasses();
-    const uiClasses = getUiClasses();
-    const parentRef = useRef(null);
+    const classes = getClasses()
+    const uiClasses = getUiClasses()
+    const parentRef = useRef(null)
 
-    const optionsContext = useContext(OptionsContext);
-    const optionsBusContext = useContext(OptionsBusContext);
+    const optionsContext = useContext(OptionsContext)
+    const optionsBusContext = useContext(OptionsBusContext)
 
     const onSetDebounced = useCallback(
         (param: string, debounceTime: number, childKey?: string) =>
             debounce((value: any) => {
-                useSyncConfig(optionsBusContext, 'pluck', param, value, childKey);
+                useSyncConfig(optionsBusContext, 'pluck', param, value, childKey)
             }, debounceTime),
         [optionsBusContext],
-    );
+    )
 
     const onSwitch = useCallback(
         (param: string, childKey?: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
-            useSyncConfig(optionsBusContext, 'pluck', param, event.target.checked, childKey);
+            useSyncConfig(optionsBusContext, 'pluck', param, event.target.checked, childKey)
         },
         [optionsBusContext],
-    );
+    )
 
-    const syncEnabled = onSetDebounced('enabled', 1);
+    const syncEnabled = onSetDebounced('enabled', 1)
 
     const onSwitchConnected = useCallback(
         () => (event: React.ChangeEvent<any>, value: any) => {
-            syncEnabled(event.target.checked);
+            syncEnabled(event.target.checked)
         },
         [],
-    );
+    )
 
     // === VOLUME / LEVEL
 
-    const [volume, setVolume] = useState(optionsContext!.noise.volume! || 0.5);
-    const syncVolume = onSetDebounced('volume', 25);
+    const [volume, setVolume] = useState(optionsContext!.noise.volume! || 0.5)
+    const syncVolume = onSetDebounced('volume', 25)
 
     const onVolumeChange = useCallback(
         () => (volume: number) => {
-            setVolume(volume / 100);
-            syncVolume(volume / 100);
+            setVolume(volume / 100)
+            syncVolume(volume / 100)
         },
         [setVolume],
-    );
+    )
 
     // === PAN
 
-    const [pan, setPan] = useState<number>((optionsContext?.noise as any).pan || 0);
-    const syncPan = onSetDebounced('pan', 1);
+    const [pan, setPan] = useState<number>((optionsContext?.noise as any).pan || 0)
+    const syncPan = onSetDebounced('pan', 1)
 
     const onPanChange = useCallback(
         () => (pan: number) => {
-            setPan(pan / 100);
-            syncPan(pan / 100);
+            setPan(pan / 100)
+            syncPan(pan / 100)
         },
         [setPan],
-    );
+    )
 
     // === ATTACK NOISE
 
-    const [attackNoise, setAttackNoise] = useState<number>((optionsContext?.pluck as any).attackNoise || 0);
-    const syncAttackNoise = onSetDebounced('attackNoise', 1);
+    const [attackNoise, setAttackNoise] = useState<number>((optionsContext?.pluck as any).attackNoise || 0)
+    const syncAttackNoise = onSetDebounced('attackNoise', 1)
 
     const onAttackNoiseChange = useCallback(
         () => (attackNoise: number) => {
-            setAttackNoise(attackNoise);
-            syncAttackNoise(attackNoise);
+            setAttackNoise(attackNoise)
+            syncAttackNoise(attackNoise)
         },
         [setAttackNoise],
-    );
+    )
 
     // === DAMPENING FREQUENCY
 
-    const [dampening, setDampening] = useState<number>((optionsContext?.pluck as any).dampening || 0);
-    const syncDampening = onSetDebounced('dampening', 1);
+    const [dampening, setDampening] = useState<number>((optionsContext?.pluck as any).dampening || 0)
+    const syncDampening = onSetDebounced('dampening', 1)
 
     const onDampeningChange = useCallback(
         () => (dampening: number) => {
-            setDampening(dampening);
-            syncDampening(dampening);
+            setDampening(dampening)
+            syncDampening(dampening)
         },
         [setDampening],
-    );
+    )
 
     // === RELEASE TIME
 
-    const [release, setRelease] = useState<number>((optionsContext?.pluck as any).release || 0);
-    const syncRelease = onSetDebounced('release', 1);
+    const [release, setRelease] = useState<number>((optionsContext?.pluck as any).release || 0)
+    const syncRelease = onSetDebounced('release', 1)
 
     const onReleaseChange = useCallback(
         () => (release: number) => {
-            setRelease(release);
-            syncRelease(release);
+            setRelease(release)
+            syncRelease(release)
         },
         [setRelease],
-    );
+    )
 
     // === OCTAVE
 
-    const syncOctave = onSetDebounced('octave', 1);
+    const syncOctave = onSetDebounced('octave', 1)
 
     const onOctaveChange = useCallback(
         () => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-            syncOctave(parseInt(event.target.value, 10) || 0);
+            syncOctave(parseInt(event.target.value, 10) || 0)
         },
         [],
-    );
+    )
 
     return (
         <Paper elevation={3} className={uiClasses.paper}>
@@ -380,5 +380,5 @@ export const Pluck = () => {
                 </Grid>
             </Grid>
         </Paper>
-    );
-};
+    )
+}

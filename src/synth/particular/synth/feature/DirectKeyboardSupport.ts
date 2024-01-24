@@ -1,8 +1,8 @@
-import { Note } from '../interface/Note';
-import { NoteReceiver } from '../interface/NoteReceiver';
+import { Note } from '../interface/Note'
+import { NoteReceiver } from '../interface/NoteReceiver'
 
 export interface PianoKeyMap {
-    [key: string]: Note;
+    [key: string]: Note
 }
 
 export class DirectKeyboardSupport {
@@ -80,10 +80,10 @@ export class DirectKeyboardSupport {
             octave: 4,
         },
         // TODO
-    };
+    }
 
     constructor(protected noteReceiver: NoteReceiver) {
-        this.doListenToKeyboardEvents();
+        this.doListenToKeyboardEvents()
     }
 
     // TODO: key mapping dynamically, default (AwSeDFtGzHuJKofLpÖÄ) starting with C3
@@ -91,16 +91,16 @@ export class DirectKeyboardSupport {
     // TODO: c ans v for velocity (default)
 
     doListenToKeyboardEvents() {
-        console.log('[DirectKeyboardSupport] Enabled');
+        console.log('[DirectKeyboardSupport] Enabled')
 
         window.addEventListener('keydown', (evt: KeyboardEvent) => {
-            console.log('[DirectKeyboardSupport] keydown', evt);
+            console.log('[DirectKeyboardSupport] keydown', evt)
             // TODO: detect keys pressed
-        });
+        })
 
         window.addEventListener('keyup', (evt: KeyboardEvent) => {
-            console.log('[DirectKeyboardSupport] keyup', evt);
+            console.log('[DirectKeyboardSupport] keyup', evt)
             // TODO: detect keys pressed
-        });
+        })
     }
 }
